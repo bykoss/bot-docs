@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bot Docs — Comandos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #181818;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #fff;
+    --tag-bg: #1e1e1e;
+    --cmd-bg: #141414;
+    --sidebar-w: 260px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+
+  .sidebar-logo p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .prefix-badge {
+    display: inline-block;
+    background: #1e1e1e;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    color: #ccc;
+    margin-top: 8px;
+  }
+
+  .sidebar-nav {
+    padding: 16px 0;
+    flex: 1;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 24px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    font-size: 13.5px;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+  }
+
+  .nav-item:hover { color: #fff; background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: #fff; border-left-color: #fff; background: rgba(255,255,255,0.06); }
+
+  .nav-count {
+    margin-left: auto;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* MAIN */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 50;
+  }
+
+  .search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    width: 320px;
+  }
+
+  .search-wrap svg { color: var(--muted); flex-shrink: 0; }
+
+  .search-wrap input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+  }
+
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .topbar-right {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .content {
+    padding: 48px 40px;
+    max-width: 900px;
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 64px; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .section-badge {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* CMD CARD */
+  .cmd-grid { display: flex; flex-direction: column; gap: 2px; }
+
+  .cmd-card {
+    background: var(--cmd-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: border-color 0.15s, background 0.15s;
+    display: none;
+  }
+
+  .cmd-card.visible { display: block; }
+
+  .cmd-card:hover {
+    border-color: var(--border2);
+    background: var(--bg3);
+  }
+
+  .cmd-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cmd-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background: #1a1a1a;
+    border: 1px solid var(--border2);
+    padding: 4px 12px;
+    border-radius: 6px;
+  }
+
+  .cmd-perm {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .perm-admin { background: #1f1010; color: #e57373; border: 1px solid #3a1a1a; }
+  .perm-mod { background: #121a10; color: #81c784; border: 1px solid #1a3a1a; }
+  .perm-all { background: #111520; color: #7986cb; border: 1px solid #1a2040; }
+
+  .cmd-desc {
+    margin-top: 10px;
+    font-size: 13.5px;
+    color: #bbb;
+    line-height: 1.6;
+  }
+
+  .cmd-usage {
+    margin-top: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    background: #0e0e0e;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .cmd-usage span { color: #aaa; }
+
+  .cmd-aliases {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .alias-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: #161616;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 56px 40px 0;
+    max-width: 900px;
+    margin-bottom: 48px;
+  }
+
+  .hero h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -2px;
+    line-height: 1.1;
+  }
+
+  .hero p {
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 540px;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 24px;
+    margin-top: 28px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .divider { width: 1px; background: var(--border); align-self: stretch; }
+
+  /* NO RESULTS */
+  .no-results {
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    font-size: 14px;
+    display: none;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .content, .hero { padding: 24px 20px; }
+    .topbar { padding: 12px 20px; }
+    .search-wrap { width: 100%; }
+    .hero h2 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Bot Docs</h1>
+    <p>Panel de comandos</p>
+    <div class="prefix-badge">Prefijo: <strong>,</strong></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Categorias</div>
+    <a class="nav-item active" onclick="filterSection('all')" href="#">
+      Todos los comandos <span class="nav-count">83</span>
+    </a>
+    <a class="nav-item" onclick="filterSection('moderacion')" href="#">
+      Moderacion <span class="nav-count">55</span>
+    </a>
+    <a class="nav-item" onclick="filterSection('seguridad')" href="#">
+      Seguridad <span class="nav-count">3</span>
+    </a>
+    <a class="nav-item" onclick="filterSection('configuracion')" href="#">
+      Configuracion <span class="nav-count">12</span>
+    </a>
+    <a class="nav-item" onclick="filterSection('voz')" href="#">
+      Voz <span class="nav-count">7</span>
+    </a>
+    <a class="nav-item" onclick="filterSection('info')" href="#">
+      Info / Utilidades <span class="nav-count">6</span>
+    </a>
+    <div class="nav-label" style="margin-top:12px">Configuracion rapida</div>
+    <a class="nav-item" href="#">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      ,setup
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      ,antinuke enable
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      ,setupmute
+    </a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="hero">
+    <h2>Todos los<br>comandos.</h2>
+    <p>Documentacion completa del bot. Cada comando incluye descripcion, uso, permisos requeridos y ejemplos.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">83</span><span class="stat-label">Comandos</span></div>
+      <div class="divider"></div>
+      <div class="stat"><span class="stat-num">5</span><span class="stat-label">Categorias</span></div>
+      <div class="divider"></div>
+      <div class="stat"><span class="stat-num">,</span><span class="stat-label">Prefijo</span></div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Buscar comando..." oninput="searchCmds()">
+    </div>
+    <div class="topbar-right" id="count-label">83 comandos</div>
+  </div>
+
+  <div class="content">
+
+    <!-- MODERACION -->
+    <div class="section" id="sec-moderacion">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Moderacion</div>
+          <div class="section-desc">Gestiona miembros, canales y mensajes del servidor.</div>
+        </div>
+        <div class="section-badge">55 comandos</div>
+      </div>
+      <div class="cmd-grid" id="grid-moderacion"></div>
+    </div>
+
+    <!-- SEGURIDAD -->
+    <div class="section" id="sec-seguridad">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Seguridad</div>
+          <div class="section-desc">Protege el servidor contra raids, nukes y abusos de permisos.</div>
+        </div>
+        <div class="section-badge">3 comandos</div>
+      </div>
+      <div class="cmd-grid" id="grid-seguridad"></div>
+    </div>
+
+    <!-- VOZ -->
+    <div class="section" id="sec-voz">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Voz</div>
+          <div class="section-desc">Controla miembros en canales de voz.</div>
+        </div>
+        <div class="section-badge">7 comandos</div>
+      </div>
+      <div class="cmd-grid" id="grid-voz"></div>
+    </div>
+
+    <!-- CONFIGURACION -->
+    <div class="section" id="sec-configuracion">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Configuracion</div>
+          <div class="section-desc">Configura bienvenidas, logs, roles automaticos, niveles y mas.</div>
+        </div>
+        <div class="section-badge">12 comandos</div>
+      </div>
+      <div class="cmd-grid" id="grid-configuracion"></div>
+    </div>
+
+    <!-- INFO -->
+    <div class="section" id="sec-info">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Info y Utilidades</div>
+          <div class="section-desc">Informacion sobre usuarios, servidor y utilidades generales.</div>
+        </div>
+        <div class="section-badge">6 comandos</div>
+      </div>
+      <div class="cmd-grid" id="grid-info"></div>
+    </div>
+
+    <div class="no-results" id="no-results">No se encontraron comandos para tu busqueda.</div>
+
+  </div>
+</main>
+
+<script>
+const COMMANDS = {
+  moderacion: [
+    { name: 'ban', perm: 'admin', aliases: ['b'], desc: 'Banea a un miembro del servidor permanentemente.', usage: ',ban @usuario [razon]', example: ',ban @usuario Spam repetido' },
+    { name: 'unban', perm: 'admin', desc: 'Desbanea a un usuario usando su ID.', usage: ',unban <ID>', example: ',unban 123456789012345678' },
+    { name: 'softban', perm: 'admin', desc: 'Banea y desbanea inmediatamente al usuario, borrando sus mensajes de los ultimos 7 dias.', usage: ',softban @usuario [razon]', example: ',softban @usuario Limpieza de mensajes' },
+    { name: 'hardban', perm: 'admin', desc: 'Banea permanentemente al usuario sin posibilidad de unban desde el bot.', usage: ',hardban @usuario [razon]', example: ',hardban @usuario Raid' },
+    { name: 'tempban', perm: 'admin', desc: 'Banea temporalmente a un miembro. Duracion: s (segundos), m (minutos), h (horas), d (dias).', usage: ',tempban @usuario <duracion> [razon]', example: ',tempban @usuario 3d Conducta inapropiada' },
+    { name: 'hackban', perm: 'admin', desc: 'Banea usuarios por su ID sin que esten en el servidor.', usage: ',hackban <ID1> <ID2> ...', example: ',hackban 111111111 222222222' },
+    { name: 'massban', perm: 'admin', desc: 'Banea a multiples usuarios mencionados a la vez.', usage: ',massban @usuario1 @usuario2 ...', example: ',massban @user1 @user2 @user3' },
+    { name: 'kick', perm: 'mod', aliases: ['k'], desc: 'Expulsa a un miembro del servidor. Puede volver a unirse.', usage: ',kick @usuario [razon]', example: ',kick @usuario Comportamiento inadecuado' },
+    { name: 'masskick', perm: 'mod', desc: 'Expulsa a multiples miembros mencionados a la vez.', usage: ',masskick @usuario1 @usuario2 ...', example: ',masskick @user1 @user2' },
+    { name: 'mute', perm: 'mod', desc: 'Silencia a un miembro en todos los canales de texto. Requiere haber ejecutado ,setupmute primero.', usage: ',mute @usuario [razon]', example: ',mute @usuario Spam' },
+    { name: 'unmute', perm: 'mod', desc: 'Quita el silencio a un miembro muteado.', usage: ',unmute @usuario', example: ',unmute @usuario' },
+    { name: 'imagemute', perm: 'mod', desc: 'Impide que el usuario envie imagenes o embeds. Requiere ,setupmute.', usage: ',imagemute @usuario [razon]', example: ',imagemute @usuario Imagenes inapropiadas' },
+    { name: 'reactionmute', perm: 'mod', desc: 'Impide que el usuario agregue reacciones. Requiere ,setupmute.', usage: ',reactionmute @usuario [razon]', example: ',reactionmute @usuario Abuso de reacciones' },
+    { name: 'timeout', perm: 'mod', aliases: ['to'], desc: 'Aplica un timeout nativo de Discord al miembro. No puede escribir ni ver canales durante el tiempo indicado.', usage: ',timeout @usuario <duracion> [razon]', example: ',timeout @usuario 10m Discusion' },
+    { name: 'jail', perm: 'mod', desc: 'Encierra al miembro en el canal #jail, quitandole acceso a todo lo demas. Requiere haber ejecutado ,setup.', usage: ',jail @usuario [razon]', example: ',jail @usuario Investigacion en curso' },
+    { name: 'unjail', perm: 'mod', desc: 'Libera al miembro del jail y restaura su acceso al servidor.', usage: ',unjail @usuario', example: ',unjail @usuario' },
+    { name: 'warn', perm: 'mod', desc: 'Emite una advertencia formal al miembro. Se guarda en su historial.', usage: ',warn @usuario <razon>', example: ',warn @usuario Primera advertencia por spam' },
+    { name: 'warns', perm: 'mod', desc: 'Muestra todas las advertencias de un miembro.', usage: ',warns @usuario', example: ',warns @usuario' },
+    { name: 'delwarn', perm: 'mod', desc: 'Elimina una advertencia especifica del miembro por su numero.', usage: ',delwarn @usuario <numero>', example: ',delwarn @usuario 2' },
+    { name: 'clearwarns', perm: 'mod', desc: 'Borra todas las advertencias de un miembro de una sola vez.', usage: ',clearwarns @usuario', example: ',clearwarns @usuario' },
+    { name: 'purge', perm: 'mod', aliases: ['clear'], desc: 'Borra en masa mensajes del canal actual. Maximo 100 mensajes a la vez.', usage: ',purge <cantidad>', example: ',purge 50' },
+    { name: 'nuke', perm: 'admin', desc: 'Clona el canal actual y elimina el original, borrando todos sus mensajes.', usage: ',nuke', example: ',nuke' },
+    { name: 'lock', perm: 'mod', desc: 'Bloquea un canal para que nadie pueda enviar mensajes. Si no mencionas canal, bloquea el actual.', usage: ',lock [#canal]', example: ',lock #general' },
+    { name: 'unlock', perm: 'mod', desc: 'Desbloquea un canal previamente bloqueado.', usage: ',unlock [#canal]', example: ',unlock #general' },
+    { name: 'hide', perm: 'mod', desc: 'Oculta un canal a todos los miembros.', usage: ',hide [#canal]', example: ',hide #canal-secreto' },
+    { name: 'reveal', perm: 'mod', desc: 'Revela un canal oculto a todos los miembros.', usage: ',reveal [#canal]', example: ',reveal #canal-secreto' },
+    { name: 'slowmode', perm: 'mod', desc: 'Activa el modo lento en un canal. Pon 0 para desactivarlo.', usage: ',slowmode [#canal] <segundos>', example: ',slowmode #general 10' },
+    { name: 'imagesonly', perm: 'mod', desc: 'Restringe un canal a solo imagenes. Los miembros no podran escribir texto.', usage: ',imagesonly [#canal]', example: ',imagesonly #fotos' },
+    { name: 'botsonly', perm: 'mod', desc: 'Restringe un canal para que solo los bots puedan escribir.', usage: ',botsonly [#canal]', example: ',botsonly #bot-spam' },
+    { name: 'stripstaff', perm: 'admin', desc: 'Quita todos los roles de staff de un miembro. Requiere configurar roles con ,staffrole.', usage: ',stripstaff @usuario', example: ',stripstaff @usuario' },
+    { name: 'role', perm: 'mod', desc: 'Da o quita un rol a un miembro especifico.', usage: ',role add/remove @usuario @rol', example: ',role add @usuario @Miembro' },
+    { name: 'roleall', perm: 'admin', desc: 'Da un rol a todos los miembros del servidor (puede tardar segun el tamaño del servidor).', usage: ',roleall @rol', example: ',roleall @Verificado' },
+    { name: 'unroleall', perm: 'admin', desc: 'Quita un rol a todos los miembros que lo tengan.', usage: ',unroleall @rol', example: ',unroleall @Verificado' },
+    { name: 'antispam', perm: 'admin', desc: 'Activa o desactiva la deteccion automatica de spam. Si alguien envia 6+ mensajes en 5 segundos recibe timeout.', usage: ',antispam on/off', example: ',antispam on' },
+    { name: 'mentionspam', perm: 'admin', desc: 'Activa o desactiva la proteccion contra spam de menciones. 5+ menciones = timeout automatico.', usage: ',mentionspam on/off', example: ',mentionspam on' },
+    { name: 'filter', perm: 'mod', desc: 'Gestiona el filtro de palabras. Mensajes con palabras filtradas se eliminan automaticamente.', usage: ',filter add/remove/list [palabra]', example: ',filter add malapalabra' },
+    { name: 'case', perm: 'mod', desc: 'Muestra los detalles de un caso de moderacion por su ID.', usage: ',case <ID>', example: ',case 5' },
+    { name: 'cases', perm: 'mod', desc: 'Muestra todos los casos de moderacion de un miembro.', usage: ',cases @usuario', example: ',cases @usuario' },
+    { name: 'history', perm: 'mod', desc: 'Muestra el historial completo de acciones de moderacion de un miembro incluyendo advertencias y casos.', usage: ',history @usuario', example: ',history @usuario' },
+    { name: 'clearhistory', perm: 'admin', desc: 'Borra todo el historial de moderacion de un miembro (casos y advertencias).', usage: ',clearhistory @usuario', example: ',clearhistory @usuario' },
+    { name: 'reason', perm: 'mod', desc: 'Edita la razon de un caso de moderacion existente.', usage: ',reason <ID> <nueva razon>', example: ',reason 5 Razon actualizada' },
+    { name: 'note', perm: 'mod', desc: 'Agrega, ve o elimina notas privadas sobre un miembro. Solo el staff puede verlas.', usage: ',note add/view/delete @usuario [texto]', example: ',note add @usuario Sospechoso de raid' },
+    { name: 'modstats', perm: 'mod', desc: 'Muestra estadisticas de acciones de moderacion realizadas por un moderador.', usage: ',modstats [@moderador]', example: ',modstats @moderador' },
+    { name: 'jailedlist', perm: 'mod', desc: 'Muestra una lista de todos los miembros actualmente en jail.', usage: ',jailedlist', example: ',jailedlist' },
+    { name: 'bannedlist', perm: 'admin', desc: 'Muestra la lista de usuarios baneados del servidor con su razon.', usage: ',bannedlist', example: ',bannedlist' },
+    { name: 'setup', perm: 'admin', desc: 'Configura el sistema de jail automaticamente. Crea el rol Jailed, el canal #jail y el canal #jail-log.', usage: ',setup', example: ',setup' },
+    { name: 'setupmute', perm: 'admin', desc: 'Crea los roles de silencio: Muted, Image Muted y Reaction Muted. Necesario para usar ,mute ,imagemute y ,reactionmute.', usage: ',setupmute', example: ',setupmute' },
+    { name: 'staffrole', perm: 'admin', desc: 'Agrega o quita un rol de la lista de roles de staff (usados por ,stripstaff).', usage: ',staffrole add/remove @rol', example: ',staffrole add @Moderador' },
+  ],
+  seguridad: [
+    { name: 'antinuke', perm: 'admin', desc: 'Sistema de proteccion contra nukes. Detecta acciones masivas (bans, kicks, eliminar canales/roles) y castiga al responsable. Subcomandos: enable, disable, ban [limite], kick [limite], channel [limite], role [limite], webhook [limite], punishment [ban/kick/strip], whitelist add/remove/view @usuario, logs #canal', usage: ',antinuke <subcomando> [valor]', example: ',antinuke enable\n,antinuke ban 3\n,antinuke punishment strip\n,antinuke whitelist add @admin' },
+    { name: 'antiraid', perm: 'admin', desc: 'Sistema de proteccion contra raids. Detecta entradas masivas y puede verificar avatar, edad de cuenta, y hacer lockdown. Subcomandos: massjoin on/off [threshold] [accion], avatar on/off [accion], age on/off [dias] [accion], whitelist add/remove @usuario, lockdown, unlockdown', usage: ',antiraid <subcomando> [opciones]', example: ',antiraid massjoin on 5 kick\n,antiraid avatar on ban\n,antiraid age on 7 kick\n,antiraid lockdown' },
+    { name: 'fakeperm', perm: 'admin', desc: 'Restringe permisos peligrosos de un rol aunque Discord los muestre como activos. Util para limitar lo que moderadores pueden hacer. Subcomandos: add @rol permiso, remove @rol permiso, list', usage: ',fakeperm <add/remove/list> @rol [permiso]', example: ',fakeperm add @Moderador BanMembers\n,fakeperm list' },
+  ],
+  voz: [
+    { name: 'vcmute', perm: 'mod', desc: 'Mutea a un miembro en su canal de voz actual. El miembro no podra hablar.', usage: ',vcmute @usuario', example: ',vcmute @usuario' },
+    { name: 'vcunmute', perm: 'mod', desc: 'Quita el mute de voz a un miembro.', usage: ',vcunmute @usuario', example: ',vcunmute @usuario' },
+    { name: 'vckick', perm: 'mod', desc: 'Desconecta a un miembro de su canal de voz actual.', usage: ',vckick @usuario', example: ',vckick @usuario' },
+    { name: 'vcban', perm: 'mod', desc: 'Banea a un miembro de todos los canales de voz del servidor. Si esta en voz, lo desconecta.', usage: ',vcban @usuario', example: ',vcban @usuario' },
+    { name: 'vcunban', perm: 'mod', desc: 'Quita el ban de voz a un miembro.', usage: ',vcunban @usuario', example: ',vcunban @usuario' },
+    { name: 'move', perm: 'mod', desc: 'Mueve a un miembro de su canal de voz actual a otro canal.', usage: ',move @usuario #canal-voz', example: ',move @usuario #sala-general' },
+    { name: 'moveall', perm: 'mod', desc: 'Mueve a todos los miembros de un canal de voz a otro. Si mencionas un solo canal, mueve a todos desde tu canal actual.', usage: ',moveall [#canal-origen] #canal-destino', example: ',moveall #sala-1 #sala-2' },
+    { name: 'disconnectall', perm: 'mod', desc: 'Desconecta a todos los miembros de un canal de voz especifico.', usage: ',disconnectall [#canal-voz]', example: ',disconnectall #sala-general' },
+    { name: 'deafen', perm: 'mod', desc: 'Ensordece a un miembro en su canal de voz. No podra escuchar nada.', usage: ',deafen @usuario', example: ',deafen @usuario' },
+  ],
+  configuracion: [
+    { name: 'prefix', perm: 'admin', desc: 'Cambia el prefijo del bot para este servidor. Maximo 5 caracteres.', usage: ',prefix <nuevo-prefijo>', example: ',prefix !' },
+    { name: 'welcome', perm: 'admin', desc: 'Configura el mensaje de bienvenida. Variables disponibles: {user} (mencion), {server} (nombre del servidor), {membercount} (numero de miembros). Subcomandos: channel #canal, message <texto>, disable', usage: ',welcome channel #canal\n,welcome message <texto>', example: ',welcome channel #bienvenidas\n,welcome message Bienvenido {user} al servidor {server}!' },
+    { name: 'goodbye', perm: 'admin', desc: 'Configura el mensaje de despedida cuando alguien sale del servidor. Variables: {user}, {tag}, {server}, {membercount}. Subcomandos: channel #canal, message <texto>, disable', usage: ',goodbye channel #canal\n,goodbye message <texto>', example: ',goodbye channel #logs\n,goodbye message {tag} ha abandonado el servidor.' },
+    { name: 'boost', perm: 'admin', desc: 'Configura el mensaje cuando alguien hace boost al servidor. Variables: {user}, {server}. Subcomandos: channel #canal, message <texto>', usage: ',boost channel #canal\n,boost message <texto>', example: ',boost channel #boosts\n,boost message {user} ha boosteado el servidor!' },
+    { name: 'autorole', perm: 'admin', desc: 'Configura un rol que se le da automaticamente a cada nuevo miembro que se une al servidor.', usage: ',autorole set @rol\n,autorole disable', example: ',autorole set @Miembro' },
+    { name: 'logging', perm: 'admin', desc: 'Configura los canales de logs para eventos del servidor. Tipos disponibles: messagedelete, messageedit, ban, kick, join, leave, role, channel. Subcomandos: <tipo> #canal, disable, view', usage: ',logging <tipo> #canal', example: ',logging messagedelete #logs\n,logging join #entradas\n,logging view' },
+    { name: 'voicemaster', perm: 'admin', desc: 'Sistema de canales de voz temporales. Cuando un miembro entra al canal creador, se le crea su propio canal privado que se elimina al vaciarse.', usage: ',voicemaster setup\n,voicemaster disable', example: ',voicemaster setup' },
+    { name: 'reactionrole', perm: 'admin', aliases: ['rr'], desc: 'Sistema de roles por reaccion. El miembro reacciona a un mensaje y recibe el rol automaticamente. Subcomandos: add <messageID> <emoji> @rol, remove <messageID> <emoji>, list', usage: ',reactionrole add <messageID> <emoji> @rol', example: ',reactionrole add 123456789 ✅ @Verificado\n,reactionrole list' },
+    { name: 'trigger', perm: 'admin', desc: 'El bot reacciona automaticamente con un emoji cuando alguien escribe una palabra especifica. Subcomandos: add <palabra> <emoji>, remove <palabra>, list', usage: ',trigger add <palabra> <emoji>', example: ',trigger add hola 👋\n,trigger list' },
+    { name: 'levelreward', perm: 'admin', aliases: ['levelrewards'], desc: 'Configura roles que se dan automaticamente al alcanzar cierto nivel de XP. Subcomandos: add <nivel> @rol, remove <nivel>, list, channel #canal', usage: ',levelreward add <nivel> @rol', example: ',levelreward add 5 @Activo\n,levelreward add 10 @Veterano\n,levelreward list' },
+  ],
+  info: [
+    { name: 'rank', perm: 'all', desc: 'Muestra tu nivel actual, XP acumulado y progreso hacia el siguiente nivel. Puedes ver el rank de otro miembro mencionandolo.', usage: ',rank [@usuario]', example: ',rank\n,rank @usuario' },
+    { name: 'leaderboard', perm: 'all', aliases: ['lb'], desc: 'Muestra el top 10 de miembros con mas nivel en el servidor.', usage: ',leaderboard', example: ',leaderboard' },
+    { name: 'serverinfo', perm: 'all', aliases: ['si'], desc: 'Muestra informacion detallada del servidor: owner, miembros, canales, roles, fecha de creacion y nivel de boost.', usage: ',serverinfo', example: ',serverinfo' },
+    { name: 'userinfo', perm: 'all', aliases: ['ui', 'whois'], desc: 'Muestra informacion detallada de un miembro: ID, apodo, fecha de entrada, fecha de creacion de cuenta, casos, advertencias y roles.', usage: ',userinfo [@usuario]', example: ',userinfo\n,userinfo @usuario' },
+    { name: 'avatar', perm: 'all', aliases: ['av'], desc: 'Muestra el avatar de un miembro en tamaño completo (1024px).', usage: ',avatar [@usuario]', example: ',avatar\n,avatar @usuario' },
+    { name: 'snipe', perm: 'all', desc: 'Muestra el ultimo mensaje eliminado en el canal actual. Solo guarda el mas reciente.', usage: ',snipe', example: ',snipe' },
+    { name: 'help', perm: 'all', desc: 'Muestra la lista de comandos disponibles. Usa el nombre de una categoria para ver sus comandos especificos.', usage: ',help [categoria]', example: ',help\n,help moderacion' },
+  ],
+};
+
+const PERM_LABELS = { admin: 'Solo Admin', mod: 'Staff / Mod', all: 'Todos' };
+const PERM_CLASS = { admin: 'perm-admin', mod: 'perm-mod', all: 'perm-all' };
+
+let allCards = [];
+
+function buildCards() {
+  for (const [cat, cmds] of Object.entries(COMMANDS)) {
+    const grid = document.getElementById('grid-' + cat);
+    if (!grid) continue;
+    cmds.forEach(cmd => {
+      const card = document.createElement('div');
+      card.className = 'cmd-card visible';
+      card.dataset.cat = cat;
+      card.dataset.name = cmd.name;
+      card.dataset.search = (cmd.name + ' ' + (cmd.desc || '') + ' ' + (cmd.aliases || []).join(' ')).toLowerCase();
+
+      const aliasesHtml = cmd.aliases?.length
+        ? `<div class="cmd-aliases">${cmd.aliases.map(a => `<span class="alias-tag">,${a}</span>`).join('')}</div>`
+        : '';
+
+      const exampleLines = cmd.example?.split('\n').map(e => `<div><span style="color:#555">$</span> ${e}</div>`).join('') || '';
+
+      card.innerHTML = `
+        <div class="cmd-top">
+          <span class="cmd-name">,${cmd.name}</span>
+          <span class="cmd-perm ${PERM_CLASS[cmd.perm]}">${PERM_LABELS[cmd.perm]}</span>
+        </div>
+        ${aliasesHtml}
+        <div class="cmd-desc">${cmd.desc}</div>
+        <div class="cmd-usage">
+          <div style="color:#555;font-size:11px;margin-bottom:4px">USO</div>
+          ${cmd.usage.split('\n').map(u => `<div><span style="color:#555">$</span> <span>${u}</span></div>`).join('')}
+        </div>
+        ${exampleLines ? `<div class="cmd-usage" style="margin-top:4px"><div style="color:#555;font-size:11px;margin-bottom:4px">EJEMPLO</div>${exampleLines}</div>` : ''}
+      `;
+      grid.appendChild(card);
+      allCards.push(card);
+    });
+  }
+  updateCount();
+}
+
+function searchCmds() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  let visible = 0;
+  allCards.forEach(card => {
+    const match = !q || card.dataset.search.includes(q);
+    card.classList.toggle('visible', match);
+    if (match) visible++;
+  });
+  document.getElementById('count-label').textContent = visible + ' comando' + (visible !== 1 ? 's' : '');
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+
+  document.querySelectorAll('.section').forEach(sec => {
+    const hasVisible = sec.querySelector('.cmd-card.visible');
+    sec.style.display = hasVisible ? '' : 'none';
+  });
+}
+
+function filterSection(cat) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  event.target.closest('.nav-item').classList.add('active');
+  document.getElementById('search').value = '';
+
+  allCards.forEach(card => {
+    card.classList.toggle('visible', cat === 'all' || card.dataset.cat === cat);
+  });
+
+  document.querySelectorAll('.section').forEach(sec => {
+    const id = sec.id.replace('sec-', '');
+    sec.style.display = (cat === 'all' || cat === id) ? '' : 'none';
+  });
+
+  updateCount();
+}
+
+function updateCount() {
+  const v = allCards.filter(c => c.classList.contains('visible')).length;
+  document.getElementById('count-label').textContent = v + ' comando' + (v !== 1 ? 's' : '');
+}
+
+buildCards();
+</script>
+</body>
+</html>
